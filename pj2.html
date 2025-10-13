@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>With U</title>
+  <link rel="stylesheet" href="pj2.css">
+</head>
+<body>
+  <div class="container">
+    <!-- 좌측 사이드바 -->
+    <aside class="sidebar">
+      <h2>Paul</h2>
+      <ul>
+        <li>Vision Board</li>
+        <li>Community</li>
+        <li>Challenges</li>
+        <li>Partners</li>
+        <li>Settings</li>
+      </ul>
+    </aside>
+
+    <!-- 메인 -->
+    <main class="main">
+      <div class="header">
+        <h1>Vision Board</h1>
+        <button class="menu-btn" id="toggleSidebar">≡ 파트너/챌린지</button>
+      </div>
+
+      <div class="vision-board">
+        <div class="card" id="shortTerm">
+          <h3>단기 목표 ✨</h3>
+          <div class="goals" id="shortTermList"></div>
+          <div class="input-area">
+            <input type="text" id="shortTermInput" placeholder="단기 목표 추가..." />
+            <button id="shortTermBtn">추가</button>
+          </div>
+        </div>
+
+        <div class="card" id="completed">
+          <h3>완료한 성취 🏆</h3>
+          <div class="goals" id="completedList"></div>
+          <div class="input-area">
+            <input type="text" id="completedInput" placeholder="완료 항목 추가..." />
+            <button id="completedBtn">추가</button>
+          </div>
+        </div>
+
+        <div class="card" id="longTerm">
+          <h3>장기 목표 🌱</h3>
+          <div class="goals" id="longTermList"></div>
+          <div class="input-area">
+            <input type="text" id="longTermInput" placeholder="장기 목표 추가..." />
+            <button id="longTermBtn">추가</button>
+          </div>
+        </div>
+
+        <div class="card" id="weekly">
+          <h3>주간 챌린지 💪</h3>
+          <div class="challenges" id="weeklyList"></div>
+          <div class="input-area">
+            <input type="text" id="weeklyInput" placeholder="주간 챌린지 추가..." />
+            <button id="weeklyBtn">추가</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card community-feed">
+        <h3>커뮤니티 피드</h3>
+        <div id="feedList"></div>
+        <div style="display:flex; margin-top:10px; gap:10px;">
+          <input type="text" id="feedInput" placeholder="글을 입력하세요" style="flex:1; padding:8px; border-radius:6px; border:1px solid #ccc;">
+          <button id="feedBtn" style="padding:8px 15px; border-radius:6px; border:none; background:#3498db; color:#fff; cursor:pointer;">올리기</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- 오른쪽 사이드바 -->
+    <aside class="right-sidebar" id="rightSidebar">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+        <h2>파트너 & 챌린지</h2>
+        <button id="closeSidebar" style="background:none; border:none; font-size:18px; cursor:pointer;">✖</button>
+      </div>
+
+      <h3>파트너 추천</h3>
+      <div class="partner">🏃‍♂️ 마라톤 준비 - Minsoo</div>
+      <div class="partner">💪 크로스핏 - Taeyoung</div>
+
+      <h3 style="margin-top:15px;">배지 컬렉션</h3>
+      <div>🏅 Beginner</div>
+      <div>🥇 5K 달성</div>
+    </aside>
+  </div>
+
+  <script src="pj2.js"></script>
+</body>
+</html>
