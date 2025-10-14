@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DearMe - 디지털 타임캡슐</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>DearMe — 디지털 타임캡슐</h1>
+      <div class="meta"></div>
+    </header>
+
+    <div class="grid">
+      <!-- 작성 사이드 -->
+      <section class="panel">
+        <h2>타임캡슐 만들기</h2>
+        <form id="capsuleForm">
+          <label>제목</label>
+          <input required type="text" id="title" placeholder="예: 2025년의 나에게">
+
+          <label>보낼 내용</label>
+          <textarea id="content" placeholder="메시지, 다짐, 사진(링크) 등을 적어보세요..."></textarea>
+
+          <label>개봉 날짜 및 시간</label>
+          <input required type="datetime-local" id="openAt">
+
+          <label>접근 설정</label>
+          <select id="visibility">
+            <option value="private">비공개 (비밀번호 필요/선택)</option>
+            <option value="public">공개 (링크로 누구나 열람)</option>
+          </select>
+
+          <label>비밀번호 (선택) — 조기 개봉 방지용</label>
+          <input type="text" id="password" placeholder="비밀번호를 설정하면 미리 열람하려면 비밀번호 필요">
+
+          <div style="display:flex;gap:8px;margin-top:12px">
+            <button class="btn" type="submit">캡슐 저장</button>
+            <button class="btn ghost" type="button" id="importBtn">가져오기 (JSON)</button>
+          </div>
+        </form>
+
+        <hr style="margin:14px 0">
+        <div class="meta">저장된 캡슐은 브라우저의 localStorage에 보관됩니다. 다른 기기에서 보려면 내보내기/가져오기 기능 사용하세요.</div>
+      </section>
+
+      <!-- 목록 영역 -->
+      <section>
+        <div class="panel" style="margin-bottom:12px">
+          <h2>내 타임캡슐</h2>
+          <div style="display:flex;gap:8px;margin-top:8px;margin-bottom:8px">
+            <input id="search" type="text" placeholder="검색 (제목, 내용)" style="flex:1;padding:8px;border:1px solid #e6e6ee;border-radius:8px">
+            <select id="filter">
+              <option value="all">전체</option>
+              <option value="locked">잠김 (개봉 전)</option>
+              <option value="open">개봉 가능</option>
+            </select>
+            <button id="exportBtn" class="btn ghost" style="padding:8px">내보내기</button>
+          </div>
+
+          <div id="capsuleList" class="list"></div>
+        </div>
+
+        <div class="panel">
+          <h2>도움말</h2>
+          <ol style="padding-left:18px">
+            <li>캡슐을 작성하고 개봉 날짜를 지정하세요.</li>
+            <li>개봉 날짜가 되면 자동으로 열람할 수 있습니다.</li>
+            <li>비밀번호를 설정하면 날짜 이전에 열람하려면 비밀번호가 필요합니다.</li>
+            <li>데이터는 브라우저에만 저장됩니다. 기기 변경 시 내보내기/가져오기를 이용하세요.</li>
+          </ol>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- 모달 템플릿 -->
+  <template id="modalTpl">
+    <div class="modal-backdrop">
+      <div class="modal">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <h2></h2>
+          <button class="btn ghost" id="closeModal">닫기</button>
+        </div>
+        <div class="meta" id="modalMeta"></div>
+        <div class="capsule-content" id="modalContent"></div>
+      </div>
+    </div>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>
