@@ -117,7 +117,7 @@
     form.dataset.editing = item.id;
     window.scrollTo({top:0,behavior:'smooth'});
   }
-
+// getComputedStyle
   function tryOpen(item){
     const openable = isOpenable(item);
     if(openable){

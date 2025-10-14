@@ -1,0 +1,285 @@
+    * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f6fa;
+  color: #333;
+}
+h1, h2, h3 {
+  font-weight: 600;
+}
+.container {
+  display: flex;
+  height: 100vh;
+  position: relative;
+}
+
+/* --- 좌측 사이드바 --- */
+.sidebar {
+  width: 220px;
+  background-color: #1e1e2f;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+.sidebar h2 {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+.sidebar ul {
+  list-style: none;
+}
+.sidebar ul li {
+  margin: 12px 0;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.sidebar ul li:hover {
+  color: #00aaff;
+  scale: 1.05;
+}
+
+/* --- 메인 영역 --- */
+.main {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.menu-btn {
+  background-color: #3498db;
+  border: none;
+  color: #fff;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+.menu-btn:hover {
+  background-color: #2980b9;
+}
+
+/* --- 비전보드 카드 --- */
+.vision-board {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 25px;
+}
+.card {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.card h3 {
+  margin-bottom: 10px;
+}
+.goals, .challenges, .partners {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.goal, .challenge, .partner {
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+.goal.blue { background-color: #3498db; color: #fff; }
+.goal.orange { background-color: #e67e22; color: #fff; }
+.goal.green { background-color: #27ae60; color: #fff; }
+.goal.purple { background-color: #8e44ad; color: #fff; }
+.challenge, .partner {
+  background-color: #f0f0f5;
+}
+
+/* --- 커뮤니티 피드 --- */
+.community-feed {
+  margin-top: 20px;
+}
+.feed-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: #e74c3c;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.delete-btn:hover {
+  transform: scale(1.2);
+  color: #c0392b;
+}
+
+/* --- 오른쪽 사이드바 --- */
+.right-sidebar {
+  position: fixed;
+  top: 0;
+  right: -320px;
+  width: 320px;
+  height: 100%;
+  background-color: #fff;
+  border-left: 1px solid #eee;
+  box-shadow: -3px 0 12px rgba(0,0,0,0.15);
+  padding: 20px;
+  overflow-y: auto;
+  z-index: 1000;
+  transition: right 0.3s ease;
+}
+.right-sidebar.active {
+  right: 0;
+}
+.right-sidebar h2 {
+  font-size: 18px;
+}
+.right-sidebar h3 {
+  font-size: 16px;
+  margin-top: 20px;
+  margin-bottom: 8px;
+}
+
+/* --- 닫기 버튼 --- */
+#closeSidebar {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* --- 반응형 --- */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+  .main {
+    padding: 15px;
+  }
+  .vision-board {
+    grid-template-columns: 1fr;
+  }
+}
+.input-area {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.input-area input {
+  flex: 1;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.input-area button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  background: #3498db;
+  color: white;
+  cursor: pointer;
+}
+
+.goal, .challenge {
+  position: relative;
+  padding: 8px 30px 8px 10px;
+  border-radius: 6px;
+  margin: 5px 0;
+}
+
+.delete-btn {
+  position: absolute;
+  right: 8px;
+  top: 6px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #999;
+  font-size: 14px;
+}
+.delete-btn:hover { color: #e74c3c; }
+.vision-board {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+}
+
+.card h3 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.goal, .challenge {
+  position: relative;
+  background: #f8f8f8;
+  padding: 10px 35px 10px 12px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  transition: background 0.2s ease;
+}
+
+.goal:hover, .challenge:hover {
+  background: #f1f1f1;
+}
+
+.goal.blue { border-left: 5px solid #3498db; }
+.goal.green { border-left: 5px solid #2ecc71; }
+.goal.purple { border-left: 5px solid #9b59b6; }
+.goal.orange { border-left: 5px solid #f39c12; }
+
+.delete-btn {
+  position: absolute;
+  right: 8px;
+  top: 6px;
+  background: none;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+  font-size: 14px;
+  display: none;
+}
+.goal:hover .delete-btn,
+.challenge:hover .delete-btn {
+  display: block;
+  color: #e74c3c;
+}
+.vision-board {
+  margin-bottom: 40px;
+}
