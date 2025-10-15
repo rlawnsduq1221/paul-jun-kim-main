@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>DearMe — 디지털 타임캡슐 (시안)</title>
+
+<!-- 웹폰트 -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg1: #120922; /* 딥 퍼플 */
+    --bg2: #241233;
+    --glass: rgba(255,255,255,0.06);
+    --glass-2: rgba(255,255,255,0.04);
+    --accent: #E94A66; /* 장밋빛 포인트 */
+    --accent-soft: rgba(233,74,102,0.14);
+    --muted: #C9C4D9;
+  }
+
+  /* Reset */
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family: "Noto Sans KR", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: radial-gradient(1200px 600px at 10% 10%, rgba(255,255,255,0.02), transparent),
+                linear-gradient(180deg,var(--bg1),var(--bg2));
+    color:#fff;
+    -webkit-font-smoothing:antialiased;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:40px;
+    overflow:hidden;
+  }
+
+  /* 입자(미세별) */
+  .particles{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background-image:
+      radial-gradient(circle at 10% 20%, rgba(255,255,255,0.06) 0 1px, transparent 1px),
+      radial-gradient(circle at 70% 80%, rgba(255,255,255,0.04) 0 1px, transparent 1px);
+    background-size: 140px 140px, 220px 220px;
+    opacity:0.6;
+    mix-blend-mode:screen;
+    animation: drift 20s linear infinite;
+  }
+  @keyframes drift {
+    0% { transform: translateY(0);}
+    50% { transform: translateY(-20px);}
+    100% { transform: translateY(0);}
+  }
+
+  /* 중앙 컨테이너 */
+  .stage{
+    width: 880px;
+    max-width: calc(100% - 48px);
+    display:grid;
+    grid-template-columns: 1fr 420px;
+    gap:32px;
+    align-items:center;
+    z-index:2;
+  }
+
+  /* 왼쪽: 설명 텍스트 */
+  .intro{
+    padding:28px;
+  }
+  .logo{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    font-weight:700;
+    letter-spacing:0.6px;
+  }
+  .logo .dot{
+    width:14px;height:14px;border-radius:50%;
+    background:linear-gradient(135deg,var(--accent), #FF7A93);
+    box-shadow:0 6px 24px var(--accent-soft);
+  }
+  h1{
+    margin-top:18px;
+    font-size:28px;
+    line-height:1.15;
+    color: #fff;
+    font-weight:700;
+  }
+  h1 .hand{
+    display:inline-block;
+    font-family:"Nanum Pen Script", "Noto Sans KR", cursive;
+    font-size:30px;
+    transform:translateY(-2px);
+    color: #FFDDE6;
+    margin-left:8px;
+  }
+  p.lead{
+    margin-top:14px;
+    color:var(--muted);
+    font-size:15px;
+    line-height:1.7;
+    max-width:540px;
+  }
+
+  .cta-row{
+    margin-top:22px;
+    display:flex;
+    gap:12px;
+    align-items:center;
+  }
+
+  .btn{
+    padding:12px 18px;
+    border-radius:12px;
+    border:none;
+    cursor:pointer;
+    font-weight:600;
+    font-size:15px;
+    transition:all .22s ease;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+  }
+  .btn.primary{
+    background:linear-gradient(90deg,var(--accent), #FF7A93);
+    color:white;
+    box-shadow:0 10px 30px var(--accent-soft);
+  }
+  .btn.ghost{
+    background:transparent;
+    color:var(--muted);
+    border:1px solid rgba(255,255,255,0.06);
+  }
+  .btn.primary:hover{transform:translateY(-4px)}
+  .btn.ghost:hover{transform:translateY(-3px); color:#fff}
+
+  /* 오른쪽: 글라스 카드 + 편지 요소 */
+  .card-wrap{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .glass{
+    width:420px;
+    height:360px;
+    border-radius:18px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+    border: 1px solid rgba(255,255,255,0.06);
+    box-shadow: 0 8px 40px rgba(10,6,20,0.6);
+    padding:28px;
+    position:relative;
+    backdrop-filter: blur(10px) saturate(120%);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+  }
+
+  /* 내부: 떠 있는 편지 카드 (slim) */
+  .paper{
+    width:320px;
+    height:200px;
+    background: linear-gradient(180deg,#fff 0%, #FFF7F6 100%);
+    border-radius:12px;
+    transform: translateY(-6px) rotate(-1deg);
+    box-shadow: 0 18px 50px rgba(2,2,10,0.45);
+    display:flex;
+    flex-direction:column;
+    padding:18px 20px;
+    position:relative;
+    transition: transform .35s cubic-bezier(.2,.9,.25,1);
+    cursor:pointer;
+  }
+  .paper .topline{
+    font-size:13px;
+    color:#BBA7A7;
+    letter-spacing:0.6px;
+  }
+  .paper h3{
+    margin-top:10px;
+    font-size:18px;
+    color:#2a2020;
+    font-weight:700;
+  }
+  .paper p{
+    margin-top:10px;
+    color:#6b5b5b;
+    font-size:14px;
+    line-height:1.6;
+  }
+  .paper::after{
+    content:"";
+    position:absolute;
+    right:12px;bottom:12px;
+    width:10px;height:10px;
+    background:linear-gradient(135deg,var(--accent),#FF7A93);
+    border-radius:50%;
+    box-shadow:0 8px 18px var(--accent-soft);
+    opacity:0.95;
+  }
+
+  .paper:hover{ transform: translateY(-18px) rotate(-1deg) scale(1.01); }
+
+  /* 작은 설명 텍스트 아래 */
+  .meta{
+    margin-top:14px;
+    color:var(--muted);
+    font-size:13px;
+  }
+
+  /* modal (편지작성) */
+  .modal-backdrop{
+    position:fixed;inset:0;background:linear-gradient(180deg, rgba(10,6,18,0.6), rgba(10,6,18,0.85));
+    display:flex;align-items:center;justify-content:center;
+    z-index:60;opacity:0;pointer-events:none;transition:all .22s ease;
+  }
+  .modal-backdrop.open{opacity:1;pointer-events:auto}
+  .modal{
+    width:700px;max-width:92%;border-radius:14px;background:linear-gradient(180deg,#0f0b12,#13101a);
+    padding:20px;border:1px solid rgba(255,255,255,0.06);box-shadow:0 40px 100px rgba(2,2,10,0.7);
+  }
+  .modal h2{color:#fff;margin-bottom:10px}
+  .form-row{display:flex;gap:12px;margin-bottom:12px}
+  .input, textarea{
+    width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);
+    background:rgba(255,255,255,0.02);color:#fff;font-size:14px;
+  }
+  textarea{min-height:180px;resize:vertical}
+  .modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:10px}
+
+  /* 반응형 */
+  @media (max-width:980px){
+    .stage{grid-template-columns:1fr;gap:18px;padding:0}
+    .card-wrap{order:-1}
+    .glass{width:100%}
+  }
+
+</style>
+</head>
+<body>
+  <div class="particles" aria-hidden="true"></div>
+<!-- 1 -->
+  <div class="stage" role="main">
+    <!-- LEFT -->
+    <div class="intro">
+      <div class="logo">
+        <div class="dot" aria-hidden="true"></div>
+        <div>DearMe</div>
+      </div>
+
+      <h1>미래의 나에게, <span class="hand">지금 한 줄</span>을 남겨보세요.</h1>
+      <p class="lead">이 공간은 당신의 기억을 디지털 방식으로 안전하게 잠그는 곳입니다. 간단한 메시지부터 긴 편지까지 — 열람 날짜를 정하고, 특별한 순간을 기다리세요.</p>
+
+      <div class="cta-row">
+        <button class="btn primary" id="openWrite">지금 편지 쓰기</button>
+        <button class="btn ghost" id="openVault">내 타임캡슐 보기</button>
+      </div>
+
+      <div style="margin-top:18px;color:var(--muted);font-size:13px">Tip: 편지 작성 시 '개봉일(옵션)'을 지정하면 자동으로 봉인됩니다.</div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="card-wrap">
+      <div class="glass" aria-hidden="false">
+        <!-- floating paper -->
+        <div class="paper" id="paperPreview" title="클릭해서 편지를 작성해보세요">
+          <div class="topline">To. 미래의 나</div>
+          <h3>오늘, 무슨 일이 있었나요?</h3>
+          <p>짧은 한 문장으로도 좋습니다. 나중에 꺼내볼 때 그날의 감정이 생생히 떠오를 거예요.</p>
+        </div>
+
+        <div class="meta">예시: "오늘은 처음으로 별을 셌다. 마음이 조금 가벼워졌다."</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: write -->
+  <div class="modal-backdrop" id="modalBack">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <h2 id="modalTitle">편지 쓰기</h2>
+
+      <div class="form-row">
+        <input class="input" id="title" placeholder="편지 제목 (예: 2025년의 나에게)" />
+        <input class="input" id="openDate" placeholder="개봉일 (옵션, YYYY-MM-DD)" />
+      </div>
+
+      <textarea id="body" placeholder="당신의 이야기를 적어보세요..."></textarea>
+
+      <div class="modal-footer">
+        <button class="btn ghost" id="closeModal">취소</button>
+        <button class="btn primary" id="saveLetter">저장하기</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const openBtn = document.getElementById('openWrite');
+  const modalBack = document.getElementById('modalBack');
+  const closeModal = document.getElementById('closeModal');
+  const saveBtn = document.getElementById('saveLetter');
+  const paper = document.getElementById('paperPreview');
+
+  function openModal(){
+    modalBack.classList.add('open');
+    // focus textarea
+    setTimeout(()=>document.getElementById('body').focus(),180);
+  }
+  function closeModalFn(){
+    modalBack.classList.remove('open');
+  }
+
+  openBtn.addEventListener('click', openModal);
+  paper.addEventListener('click', openModal);
+  closeModal.addEventListener('click', closeModalFn);
+  modalBack.addEventListener('click', (e)=>{
+    if(e.target === modalBack) closeModalFn();
+  });
+
+  saveBtn.addEventListener('click', ()=>{
+    const title = document.getElementById('title').value || '무제';
+    const body = document.getElementById('body').value || '(내용 없음)';
+    const date = document.getElementById('openDate').value || '미지정';
+    // 여기선 저장 로직이 없으니 일단 미리보기만 띄움
+    closeModalFn();
+    alert('저장되었습니다. (시안)\\n제목: ' + title + '\\n개봉일: ' + date);
+  });
+</script>
+</body>
+</html>

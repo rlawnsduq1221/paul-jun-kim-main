@@ -1,0 +1,170 @@
+:root {
+  --bg: #f5f6fa;
+  --panel: #fff;
+  --accent: #3498db;
+  --muted: #888;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Inter, "Noto Sans KR", Arial, sans-serif;
+  margin: 0;
+  background: var(--bg);
+  color: #222;
+}
+
+.wrap {
+  max-width: 1100px;
+  margin: 28px auto;
+  padding: 20px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+header h1 {
+  font-size: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 20px;
+}
+
+/* 사이드 패널 */
+.panel {
+  background: var(--panel);
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(15, 15, 20, 0.06);
+}
+
+label {
+  display: block;
+  font-size: 13px;
+  margin: 8px 0 6px;
+}
+
+input[type=text],
+input[type=datetime-local],
+textarea,
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #e6e6ee;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+/* 1 */
+.btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn.ghost {
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+}
+
+.meta {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* 목록 */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.capsule {
+  background: var(--panel);
+  padding: 12px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-left: 6px solid transparent;
+}
+
+.capsule.locked {
+  border-left-color: #f39c12;
+}
+
+.capsule.open {
+  border-left-color: #2ecc71;
+}
+
+.capsule .info {
+  max-width: 68%;
+}
+
+.capsule h3 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.small {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* 모달 */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9998;
+}
+
+.modal {
+  background: #fff;
+  padding: 18px;
+  border-radius: 12px;
+  max-width: 720px;
+  width: 94%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal h2 {
+  margin-top: 0;
+}
+
+.modal .capsule-content {
+  white-space: pre-wrap;
+  margin-top: 12px;
+}
+
+/* 반응형 */
+@media (max-width: 880px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
