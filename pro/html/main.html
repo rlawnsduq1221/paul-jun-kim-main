@@ -23,14 +23,14 @@
       <p class="lead">이 공간은 당신의 기억을 디지털 방식으로 안전하게 잠그는 곳입니다. 간단한 메시지부터 긴 편지까지 — 열람 날짜를 정하고, 특별한 순간을 기다리세요.</p>
 
       <div class="cta-row">
-        <button class="btn primary" id="openWrite">지금 편지 쓰기</button>
+        <a href="./timecapsule.html"><button class="btn primary" id="openWrite">지금 편지 쓰기</button></a>
         <button class="btn ghost" id="openVault">내 타임캡슐 보기</button>
       </div>
     </div>
 
     <div class="card-wrap">
       <div class="card-back">
-        <div class="paper" id="paperPreview" >
+        <div class="paper" id="paperPreview">
           <div class="topline">To. 미래의 나</div>
           <h3>오늘, 무슨 일들이 있었나요?</h3>
           <p>짧은 한 문장으로도 좋아요. 나중에 꺼내볼 때 그날의 감정이 생생히 떠오를 거예요.</p>
@@ -38,25 +38,6 @@
       </div>
     </div>
   </div>
-
-  <div class="modal-backdrop" id="modalBack">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <h2 id="modalTitle">편지 쓰기</h2>
-
-      <div class="form-row">
-        <input class="input" id="title" placeholder="편지 제목 (예: 2025년의 나에게)" />
-        <input class="input" id="openDate" placeholder="개봉일 (옵션, YYYY-MM-DD)" />
-      </div>
-
-      <textarea id="body" placeholder="당신의 이야기를 적어보세요..."></textarea>
-
-      <div class="modal-footer">
-        <button class="btn ghost" id="closeModal">취소</button>
-        <button class="btn primary" id="saveLetter">저장하기</button>
-      </div>
-    </div>
-  </div>
-
   <script src="/pro/js/main.js"></script>
 </body>
 </html>
