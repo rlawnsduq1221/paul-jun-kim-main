@@ -68,7 +68,7 @@ textarea {
   min-height: 120px;
   resize: vertical;
 }
-/* 1 */
+
 .btn {
   background: var(--accent);
   color: #fff;

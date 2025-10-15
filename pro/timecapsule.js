@@ -7,7 +7,6 @@
   const filterSelect = document.getElementById('filter');
 
   const STORAGE_KEY = 'dearme.timecapsules.v1';
-// 1
   function loadAll(){
     try{
       const raw = localStorage.getItem(STORAGE_KEY) || '[]';
