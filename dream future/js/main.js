@@ -1,5 +1,5 @@
 function handleClick() {
-    const result = confirm('편지를 쓰시겠습니까?');
+    const result = confirm('타임캡슐을 묻어보시겠습니까?');
     if(result){
          window.location.href = './timecapsule.html';
     }else{

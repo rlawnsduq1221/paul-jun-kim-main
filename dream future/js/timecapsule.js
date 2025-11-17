@@ -81,17 +81,17 @@
       actions.className = 'actions';
 
       const openBtn = document.createElement('button');
-      openBtn.className = 'btn ghost';
+      openBtn.className = 'btn_second';
       openBtn.textContent = openable ? '열기' : '강제열기';
       openBtn.onclick = ()=> tryOpen(item);
 
       const editBtn = document.createElement('button');
-      editBtn.className = 'btn ghost';
-      editBtn.textContent = '편집';
+      editBtn.className = 'btn_second';
+      editBtn.textContent = '편집'; 
       editBtn.onclick = ()=> startEdit(item);
 
       const delBtn = document.createElement('button');
-      delBtn.className = 'btn ghost';
+      delBtn.className = 'btn_second';
       delBtn.textContent = '삭제';
       delBtn.onclick = ()=>{
         if(confirm('정말 삭제할까요?')) deleteCapsule(item.id);
