@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const delBtn = document.createElement('button');
         delBtn.className = 'btn_second';
         delBtn.textContent = '삭제';
-        delBtn.style.flex = '1';               // 균일한 버튼 크기
+        delBtn.style.flex = '1'; 
         delBtn.onclick = () => {
           if(confirm('정말 삭제할까요?')) deleteCapsule(item.id);
         };
