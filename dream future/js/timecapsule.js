@@ -54,7 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderList(){
       const list = loadAll();
-      console.log(list)
       const q = searchInput.value.trim().toLowerCase();
       const filter = filterSelect.value;
       listEl.innerHTML = ''; // 초기화
@@ -84,25 +83,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const actions = document.createElement('div');
         actions.className = 'actions';
+        actions.style.display = 'flex';  
+        actions.style.flex = '0.8'     // 버튼 크기 균일하게
+        actions.style.gap = '5px';             // 버튼 간격 일정하게
+        actions.style.alignItems = 'center';   // 버튼 정렬
 
-        const openBtn = document.createElement('button');
-        openBtn.className = 'btn_second';
-        openBtn.textContent = openable ? '열기' : '강제열기';
-        openBtn.onclick = () => tryOpen(item);
+        // 공개 캡슐: 개봉일 이후 바로 열기
+        if(openable && item.visibility === 'public'){
+          const openBtn = document.createElement('button');
+          openBtn.className = 'btn_second';
+          openBtn.textContent = '열기';
+          openBtn.style.flex = '1';            // 균일한 버튼 크기
+          openBtn.onclick = () => tryOpen(item);
+          actions.appendChild(openBtn);
+        }
 
-        const editBtn = document.createElement('button');
-        editBtn.className = 'btn_second';
-        editBtn.textContent = '편집';
-        editBtn.onclick = () => startEdit(item);
+        // 비공개 캡슐: 개봉일 이후 비밀번호 입력 버튼
+        if(openable && item.visibility === 'private'){
+          const pwBtn = document.createElement('button');
+          pwBtn.className = 'btn_second';
+          pwBtn.textContent = '비밀번호 입력';
+          pwBtn.style.flex = '1';             // 균일한 버튼 크기
+          pwBtn.onclick = () => tryOpen(item);
+          actions.appendChild(pwBtn);
+        }
 
+        // 삭제 버튼: 항상 표시, 크기 비슷하게
         const delBtn = document.createElement('button');
         delBtn.className = 'btn_second';
         delBtn.textContent = '삭제';
+        delBtn.style.flex = '1';               // 균일한 버튼 크기
         delBtn.onclick = () => {
           if(confirm('정말 삭제할까요?')) deleteCapsule(item.id);
         };
+        actions.appendChild(delBtn);
 
-        actions.append(openBtn, editBtn, delBtn);
         div.append(info, actions);
         listEl.append(div);
       });
@@ -112,35 +127,22 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    function startEdit(item){
-      document.getElementById('title').value = item.title;
-      document.getElementById('content').value = item.content;
-      document.getElementById('openAt').value = item.openAt;
-      document.getElementById('visibility').value = item.visibility || 'private';
-      document.getElementById('password').value = item.password || '';
-      form.dataset.editing = item.id;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
     function tryOpen(item){
-      const openable = isOpenable(item);
-      if(openable){
-        showModal(item);
+      if(!isOpenable(item)){
+        alert('아직 개봉일이 되지 않았습니다.');
         return;
       }
-      if(item.password){
-        const pw = prompt('비밀번호를 입력하세요 (취소는 불가능):');
-        if(pw === null) return;
-        if(pw === item.password){
-          showModal(item);
-        }else{
+
+      if(item.visibility === 'private'){
+        const pw = prompt('비밀번호를 입력하세요:');
+        if(pw === null) return; // 취소
+        if(pw !== item.password){
           alert('비밀번호가 틀렸습니다.');
-        }
-      }else{
-        if(confirm('아직 개봉일이 되지 않았습니다. 그래도 열겠습니까?')){
-          showModal(item);
+          return;
         }
       }
+
+      showModal(item);
     }
 
     function showModal(item){
@@ -162,9 +164,10 @@ document.addEventListener('DOMContentLoaded', () => {
       document.body.appendChild(backdrop);
     }
 
+    // 캡슐 작성 (편집 기능 제거)
     form.addEventListener('submit', e => {
       e.preventDefault();
-      const id = form.dataset.editing || uid();
+      const id = uid(); // 항상 새 캡슐 생성
       const data = {
         id,
         title: document.getElementById('title').value.trim(),
@@ -172,67 +175,59 @@ document.addEventListener('DOMContentLoaded', () => {
         openAt: document.getElementById('openAt').value,
         visibility: document.getElementById('visibility').value,
         password: document.getElementById('password').value || '',
-        createdAt: form.dataset.editing
-          ? loadAll().find(i => i.id === id).createdAt
-          : new Date().toISOString(),
-        opened: form.dataset.editing ? loadAll().find(i => i.id === id).opened : false,
+        createdAt: new Date().toISOString(),
+        opened: false,
       };
-
-      if(form.dataset.editing){
-        updateCapsule(id, data);
-        delete form.dataset.editing;
-      }else{
-        addCapsule(data);
-      }
+      addCapsule(data);
       form.reset();
     });
 
+    // 내보내기
     exportBtn.addEventListener('click', () => {
       const data = loadAll();
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'dearme_timecapsules.json';
+      a.download = 'Dearme.json';
       a.click();
       URL.revokeObjectURL(url);
     });
-    console.log(importBtn)
-    if (importBtn) {
 
-    
-    importBtn.addEventListener('click', () => {
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = 'application/json';
-      input.onchange = e => {
-        const f = e.target.files[0];
-        if(!f) return;
-        const r = new FileReader();
-        r.onload = ev => {
-          try{
-            const parsed = JSON.parse(ev.target.result);
-            if(!Array.isArray(parsed)) throw new Error('잘못된 형식');
-            const current = loadAll();
-            const map = new Map(current.map(i => [i.id, i]));
-            parsed.forEach(i => map.set(i.id, i));
-            const merged = Array.from(map.values());
-            saveAll(merged);
-            renderList();
-            alert('가져오기 완료');
-          }catch(err){
-            alert('가져오기 실패: ' + err.message);
-          }
+    // 가져오기
+    if (importBtn) {
+      importBtn.addEventListener('click', () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'application/json';
+        input.onchange = e => {
+          const f = e.target.files[0];
+          if(!f) return;
+          const r = new FileReader();
+          r.onload = ev => {
+            try{
+              const parsed = JSON.parse(ev.target.result);
+              if(!Array.isArray(parsed)) throw new Error('잘못된 형식');
+              const current = loadAll();
+              const map = new Map(current.map(i => [i.id, i]));
+              parsed.forEach(i => map.set(i.id, i));
+              const merged = Array.from(map.values());
+              saveAll(merged);
+              renderList();
+              alert('가져오기 완료');
+            }catch(err){
+              alert('가져오기 실패: ' + err.message);
+            }
+          };
+          r.readAsText(f, 'utf-8');
         };
-        r.readAsText(f, 'utf-8');
-      };
-      input.click();
-    });
-}
+        input.click();
+      });
+    }
+
     searchInput.addEventListener('input', renderList);
     filterSelect.addEventListener('change', renderList);
 
     renderList(); 
-
   })();
 });

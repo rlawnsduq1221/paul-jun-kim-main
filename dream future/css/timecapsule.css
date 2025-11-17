@@ -62,7 +62,7 @@ header h1 {
 /* ============ INPUTS ============ */
 label {
   font-size: 14px;
-  margin-top: 12px;
+  margin:13px;
   display: block;
   color: var(--text-muted);
 }
@@ -196,7 +196,7 @@ input:focus, textarea:focus, select:focus {
   }
 }
 .btn_second{
-   width: 30%;
+  width: 40%;
   padding: 20px 10px;
   margin: 0px 2px;
   border: 1px solid var(--accent);
