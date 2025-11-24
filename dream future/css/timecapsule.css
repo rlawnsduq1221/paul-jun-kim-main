@@ -196,12 +196,27 @@ input:focus, textarea:focus, select:focus {
   }
 }
 .btn_second{
-  width: 40%;
-  padding: 20px 10px;
-  margin: 0px 2px;
+  width: 30%;
+  padding: 5px 10px 5px 5px;
+  margin: 0px 10px;
   border: 1px solid var(--accent);
   color: var(--accent);
   background: var(--accent);
   color: white;
   border-radius: 5px;
+}
+.file-btn {
+  display:inline-block;
+  padding:10px 14px;
+  border-radius:12px;
+  cursor:pointer;
+  background: rgba(255,255,255,0.06);
+  color:white;
+  border:1px solid rgba(255,255,255,0.12);
+  transition:0.2s;
+  user-select:none;
+}
+
+.file-btn:hover {
+  background: rgba(255,255,255,0.12);
 }

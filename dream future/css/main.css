@@ -122,7 +122,6 @@ p.lead {
 
 .btn.ghost {
   background: transparent;
-  width: 
   color: var(--muted);
   border: 1px solid rgba(255,255,255,0.06);
 }

@@ -3,9 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('capsuleForm');
     const listEl = document.getElementById('capsuleList');
     const exportBtn = document.getElementById('exportBtn');
-    const importBtn = document.getElementById('importBtn');
     const searchInput = document.getElementById('search');
     const filterSelect = document.getElementById('filter');
+    const mediaInput = document.getElementById('mediaUpload');
 
     const STORAGE_KEY = 'dearme.timecapsules.v1';
     
@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const raw = localStorage.getItem(STORAGE_KEY) || '[]';
         return JSON.parse(raw);
       }catch(e){
-        console.error(e);
         return [];
       }
     }
@@ -47,17 +46,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function isOpenable(item){
-      const now = new Date();
-      const openAt = new Date(item.openAt);
-      return now >= openAt;
+      return new Date() >= new Date(item.openAt);
     }
 
     function renderList(){
       const list = loadAll();
       const q = searchInput.value.trim().toLowerCase();
       const filter = filterSelect.value;
-      listEl.innerHTML = ''; // 초기화
+      listEl.innerHTML = '';
       
+      if(list.length === 0){
+        listEl.innerHTML = '<div class="meta">저장된 캡슐이 없습니다.</div>';
+        return;
+      }
+
       list.forEach(item => {
         if(q){
           const found = (item.title + ' ' + item.content).toLowerCase().includes(q);
@@ -75,44 +77,31 @@ document.addEventListener('DOMContentLoaded', () => {
         info.className = 'info';
         const h3 = document.createElement('h3');
         h3.textContent = item.title || '(제목 없음)';
+
         const sm = document.createElement('div');
         sm.className = 'small';
-        sm.textContent = `개봉일: ${new Date(item.openAt).toLocaleString()} · ${item.visibility === 'public' ? '공개' : '비공개'}`;
+        sm.textContent = `개봉일: ${new Date(item.openAt).toLocaleString()}`;
+
         info.appendChild(h3);
         info.appendChild(sm);
 
         const actions = document.createElement('div');
         actions.className = 'actions';
-        actions.style.display = 'flex';  
-        actions.style.flex = '0.8'     // 버튼 크기 균일하게
-        actions.style.gap = '5px';             // 버튼 간격 일정하게
-        actions.style.alignItems = 'center';   // 버튼 정렬
+        actions.style.display = 'flex';
+        actions.style.flex = '1';
+        actions.style.gap = '5px';
 
-        // 공개 캡슐: 개봉일 이후 바로 열기
-        if(openable && item.visibility === 'public'){
-          const openBtn = document.createElement('button');
-          openBtn.className = 'btn_second';
-          openBtn.textContent = '열기';
-          openBtn.style.flex = '1';            // 균일한 버튼 크기
-          openBtn.onclick = () => tryOpen(item);
-          actions.appendChild(openBtn);
-        }
+        const openBtn = document.createElement('button');
+        openBtn.className = 'btn_second';
+        openBtn.style.flex = '1';
+        openBtn.textContent = openable ? '열기' : '잠김';
+        openBtn.onclick = () => tryOpen(item);
+        actions.appendChild(openBtn);
 
-        // 비공개 캡슐: 개봉일 이후 비밀번호 입력 버튼
-        if(openable && item.visibility === 'private'){
-          const pwBtn = document.createElement('button');
-          pwBtn.className = 'btn_second';
-          pwBtn.textContent = '비밀번호 입력';
-          pwBtn.style.flex = '1';             // 균일한 버튼 크기
-          pwBtn.onclick = () => tryOpen(item);
-          actions.appendChild(pwBtn);
-        }
-
-        // 삭제 버튼: 항상 표시, 크기 비슷하게
         const delBtn = document.createElement('button');
         delBtn.className = 'btn_second';
+        delBtn.style.flex = '1';
         delBtn.textContent = '삭제';
-        delBtn.style.flex = '1'; 
         delBtn.onclick = () => {
           if(confirm('정말 삭제할까요?')) deleteCapsule(item.id);
         };
@@ -121,10 +110,6 @@ document.addEventListener('DOMContentLoaded', () => {
         div.append(info, actions);
         listEl.append(div);
       });
-
-      if(list.length === 0){
-        listEl.innerHTML = '<div class="meta">아직 저장된 캡슐이 없습니다. 왼쪽에서 작성해보세요.</div>';
-      }
     }
 
     function tryOpen(item){
@@ -133,10 +118,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      if(item.visibility === 'private'){
+      if(item.visibility === 'private' && item.password){
         const pw = prompt('비밀번호를 입력하세요:');
-        if(pw === null) return; // 취소
-        if(pw !== item.password){
+        if(!pw || pw !== item.password){
           alert('비밀번호가 틀렸습니다.');
           return;
         }
@@ -148,12 +132,41 @@ document.addEventListener('DOMContentLoaded', () => {
     function showModal(item){
       const tpl = document.getElementById('modalTpl');
       const clone = tpl.content.cloneNode(true);
+
       const backdrop = clone.querySelector('.modal-backdrop');
       const modal = backdrop.querySelector('.modal');
+
       modal.querySelector('h2').textContent = item.title || '(제목 없음)';
       modal.querySelector('#modalMeta').textContent =
         `작성일: ${new Date(item.createdAt).toLocaleString()} · 개봉일: ${new Date(item.openAt).toLocaleString()}`;
-      modal.querySelector('#modalContent').textContent = item.content || '';
+
+      const contentBox = modal.querySelector('#modalContent');
+      contentBox.innerHTML = '';
+
+      // 내용 텍스트 추가
+      const p = document.createElement('p');
+      p.textContent = item.content;
+      contentBox.appendChild(p);
+
+      // 이미지/영상 표시
+      if(item.media && item.media.type){
+        if(item.media.type.startsWith('image')){
+          const img = document.createElement('img');
+          img.src = item.media.data;
+          img.style.maxWidth = '100%';
+          img.style.borderRadius = '10px';
+          img.style.marginTop = '10px';
+          contentBox.appendChild(img);
+        }
+        else if(item.media.type.startsWith('video')){
+          const video = document.createElement('video');
+          video.src = item.media.data;
+          video.controls = true;
+          video.style.maxWidth = '100%';
+          video.style.marginTop = '10px';
+          contentBox.appendChild(video);
+        }
+      }
 
       modal.querySelector('#closeModal').onclick = () => {
         backdrop.remove();
@@ -161,23 +174,54 @@ document.addEventListener('DOMContentLoaded', () => {
           updateCapsule(item.id, { opened: true, openedAt: new Date().toISOString() });
         }
       };
+
       document.body.appendChild(backdrop);
     }
 
-    // 캡슐 작성 (편집 기능 제거)
-    form.addEventListener('submit', e => {
+    // Base64 변환 함수
+    function fileToBase64(file){
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = e => resolve(e.target.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // 캡슐 저장
+    form.addEventListener('submit', async e => {
       e.preventDefault();
-      const id = uid(); // 항상 새 캡슐 생성
+
+      let media = null;
+
+      if(mediaInput.files.length > 0){
+        const file = mediaInput.files[0];
+
+        if(file.size > 100 * 1024 * 1024){ // 100MB
+          alert('파일이 100MB를 초과합니다.');
+          return;
+        }
+
+        const base64 = await fileToBase64(file);
+        media = {
+          name: file.name,
+          type: file.type,
+          data: base64
+        };
+      }
+
       const data = {
-        id,
+        id: uid(),
         title: document.getElementById('title').value.trim(),
         content: document.getElementById('content').value.trim(),
         openAt: document.getElementById('openAt').value,
         visibility: document.getElementById('visibility').value,
         password: document.getElementById('password').value || '',
+        media,
         createdAt: new Date().toISOString(),
         opened: false,
       };
+
       addCapsule(data);
       form.reset();
     });
@@ -194,40 +238,21 @@ document.addEventListener('DOMContentLoaded', () => {
       URL.revokeObjectURL(url);
     });
 
-    // 가져오기
-    if (importBtn) {
-      importBtn.addEventListener('click', () => {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'application/json';
-        input.onchange = e => {
-          const f = e.target.files[0];
-          if(!f) return;
-          const r = new FileReader();
-          r.onload = ev => {
-            try{
-              const parsed = JSON.parse(ev.target.result);
-              if(!Array.isArray(parsed)) throw new Error('잘못된 형식');
-              const current = loadAll();
-              const map = new Map(current.map(i => [i.id, i]));
-              parsed.forEach(i => map.set(i.id, i));
-              const merged = Array.from(map.values());
-              saveAll(merged);
-              renderList();
-              alert('가져오기 완료');
-            }catch(err){
-              alert('가져오기 실패: ' + err.message);
-            }
-          };
-          r.readAsText(f, 'utf-8');
-        };
-        input.click();
-      });
-    }
-
     searchInput.addEventListener('input', renderList);
     filterSelect.addEventListener('change', renderList);
 
     renderList(); 
   })();
 });
+const mediaInput = document.getElementById("mediaUpload");
+const fileLabel = document.getElementById("selectedFiles");
+
+mediaInput.addEventListener("change", () => {
+  if (mediaInput.files.length === 0) {
+    fileLabel.textContent = "";
+    return;
+  }
+
+  const files = Array.from(mediaInput.files).map(f => `${f.name} (${Math.round(f.size/1024/1024)}MB)`);
+  fileLabel.textContent = "선택된 파일:  " + files.join(", ");
+}); 

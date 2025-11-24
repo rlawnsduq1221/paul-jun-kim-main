@@ -22,6 +22,21 @@
 
           <label>보낼 내용</label>
           <textarea id="content" placeholder="메시지, 다짐, 사진(링크) 등을 적어보세요..."></textarea>
+          
+          <label>사진 / 영상 업로드 (최대 100MB)</label>
+
+          <!-- 커스텀 파일 선택 버튼 -->
+          <label for="mediaUpload" class="file-btn">파일 선택하기</label>
+          <input 
+            type="file" 
+            id="mediaUpload" 
+            accept="image/*,video/*"
+            style="display:none"
+          />
+
+          <!-- 선택된 파일 이름 표시 -->
+          <div id="selectedFiles" class="meta" style="margin-top:6px;"></div>
+
 
           <label>개봉 날짜 및 시간</label>
           <input required type="datetime-local" id="openAt">
@@ -38,6 +53,7 @@
             <button class="btn" type="submit">캡슐 저장</button>
           </div>
         </form>
+        
 
         <hr style="margin:14px 0">
         <div class="meta">저장된 캡슐은 브라우저의 localStorage에 보관됩니다. 다른 기기에서 가져오기 기능 사용하세요.</div>
